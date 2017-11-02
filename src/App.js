@@ -35,7 +35,7 @@ class App extends Component {
       words.forEach(word => {
         nv.push({text: word});
       });
-      nv.sort();
+      nv.sort( (a,b) => a.text > b.text ? 1 : -1 );
       return { vocabularies: nv };
     });
   }
