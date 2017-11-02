@@ -6,6 +6,14 @@ import IconButton from 'material-ui/IconButton';
 
 class VocabularyItem extends React.Component {
 
+
+  constructor(props) {
+    super(props);
+    this.state = {
+      translation: null,
+    }
+  }
+
 	handleClick = e => {
 		const wordSpeech = new SpeechSynthesisUtterance(this.props.word);
 		const letterSpeech = new SpeechSynthesisUtterance(this.props.word.split('').join('-'));
@@ -16,6 +24,18 @@ class VocabularyItem extends React.Component {
 		speechSynthesis.speak(letterSpeech);
 		wordSpeech.rate = 0.7;
 		speechSynthesis.speak(wordSpeech);
+
+		this.translateWord(this.props.word);
+	}
+
+	translateWord = word => {
+		fetch("https://cors-anywhere.herokuapp.com/https://glosbe.com/gapi/translate?from=nld&dest=eng&format=json&phrase=" + word)
+		    .then(response => response.json())
+		    .then(json => {
+		    	this.setState({
+		    		translation: json.tuc[0].meanings ? json.tuc[0].meanings[0].text : ''
+		    	});
+		    });
 	}
 
 	render() {
@@ -23,6 +43,7 @@ class VocabularyItem extends React.Component {
 			<ListItem 
 			onClick={this.handleClick}
 			primaryText={this.props.word}
+			secondaryText={this.state.translation}
 			rightIcon={<AudioIcon />}
 			/>
 			);
