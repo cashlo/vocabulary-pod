@@ -1,6 +1,9 @@
 import React from 'react';
 import {List, ListItem} from 'material-ui/List';
+import VocabularyItem from './VocabularyItem';
 import TextField from 'material-ui/TextField';
+import AudioIcon from 'material-ui/svg-icons/av/volume-up';
+import IconButton from 'material-ui/IconButton';
 
 class VocabularyList extends React.Component {
 
@@ -15,7 +18,9 @@ class VocabularyList extends React.Component {
 		const rows = [];
 		this.props.vocabularies.forEach(function(word) {
 			rows.push(
-				<ListItem primaryText={word.text}/>
+				<VocabularyItem
+					word={word.text}
+				/>
 			);
 		});
 		return (
