@@ -5,13 +5,12 @@ import TextField from 'material-ui/TextField';
 class VocabularyList extends React.Component {
 	constructor(props) {
 		super(props);
-		this.handleKeyPress = this.handleKeyPress.bind(this);
 		this.state = {
 			vocabularies: []
 		}
 	}
 
-	handleKeyPress(e) {
+	handleKeyPress = (e => {
 		if (e.key === 'Enter') {
 			var newWord = e.target.value;
 			this.setState(function(pState, props){
@@ -20,7 +19,7 @@ class VocabularyList extends React.Component {
 				return { vocabularies: nv };
 			});
 			e.target.value = "";
-    	}
+    		})
 	}
 
 	render() {
