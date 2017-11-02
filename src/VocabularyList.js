@@ -19,8 +19,8 @@ class VocabularyList extends React.Component {
 				return { vocabularies: nv };
 			});
 			e.target.value = "";
-    		})
-	}
+    	}
+    })
 
 	render() {
 		const rows = [];
