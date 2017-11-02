@@ -8,7 +8,7 @@ class VocabularyItem extends React.Component {
 
 	handleClick = e => {
 		const wordSpeech = new SpeechSynthesisUtterance(this.props.word);
-		const letterSpeech = new SpeechSynthesisUtterance(this.props.word.split('').join(' '));
+		const letterSpeech = new SpeechSynthesisUtterance(this.props.word.split('').join('-'));
 		wordSpeech.lang = 'nl';
 		letterSpeech.lang = 'nl';
 		letterSpeech.rate = 0.5;

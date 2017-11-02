@@ -7,6 +7,7 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import VocabularyList from './VocabularyList';
 import AppBar from 'material-ui/AppBar';
 import VocabularyActionButton from './VocabularyActionButton';
+import DrawerMenu from './DrawerMenu';
 import ContentAdd from 'material-ui/svg-icons/content/add';
 
 
@@ -17,8 +18,18 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      vocabularies: []
+      vocabularies: [],
+      menuOpen: false
     }
+  }
+
+  toggleMenu = e => {
+    this.setState(function(pState, props){
+      return { 
+        vocabularies: pState.vocabularies,
+        menuOpen: !pState.menuOpen
+      };
+    });    
   }
 
   addVocabulary = word => {
@@ -46,7 +57,9 @@ class App extends Component {
       <div className="App">
         <AppBar
           title="Vocabulary Pod"
+          onLeftIconButtonTouchTap={this.toggleMenu}
         />
+        <DrawerMenu open={this.state.menuOpen} onRequestChange={this.toggleMenu}/>
         <VocabularyList vocabularies={this.state.vocabularies} onEnterNewWord={this.addVocabulary}/>
         <VocabularyActionButton onVocabularyUpdate={this.updateVocabulary}/>
       </div>
