@@ -7,6 +7,8 @@ import AppBar from 'material-ui/AppBar';
 import LinearProgress from 'material-ui/LinearProgress';
 import VocabularyActionButton from './VocabularyActionButton';
 import DrawerMenu from './DrawerMenu';
+import DeleteIcon from 'material-ui/svg-icons/action/delete';
+import IconButton from 'material-ui/IconButton';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -30,6 +32,7 @@ class App extends Component {
     super(props);
     let match = /([^/]*)$/.exec(window.location.pathname);
     let docId = match != null ? match[1] : '';
+    this.selectedWords = [];
     this.state = {
       vocabularies: [],
       menuOpen: false,
@@ -101,10 +104,18 @@ class App extends Component {
     });    
   }
 
+  processVocabulary = vocabularies => {
+    let wordHash = {};
+    vocabularies = vocabularies.filter(v => wordHash[v.text] = !wordHash.hasOwnProperty(v.text));
+    vocabularies.sort( (a,b) => a.text > b.text ? 1 : -1 );
+    return vocabularies;
+  }
+
   addVocabulary = word => {
     this.setState(function(pState, props){
       var nv = pState.vocabularies;
       nv.push({text: word});
+      nv = this.processVocabulary(nv);
       return { vocabularies: nv };
     });
   }
@@ -115,9 +126,19 @@ class App extends Component {
       words.forEach(word => {
         nv.push({text: word});
       });
-      nv.sort( (a,b) => a.text > b.text ? 1 : -1 );
+      nv = this.processVocabulary(nv);
       return { vocabularies: nv };
     });
+  }
+
+  updateSeletedWord = selectedWords => {
+    this.selectedWords = selectedWords;
+  }
+
+  deleteSelected = () => {
+    this.setState({
+      vocabularies: this.state.vocabularies.filter(v => !this.selectedWords.includes(v.text))
+    })
   }
 
   render() {
@@ -127,10 +148,15 @@ class App extends Component {
         <AppBar
           title="Vocabulary Pod"
           onLeftIconButtonTouchTap={this.toggleMenu}
+          iconElementRight={<IconButton onClick={this.deleteSelected}><DeleteIcon /></IconButton>}
         />
         { this.state.isLoading && <LinearProgress />}
         <DrawerMenu open={this.state.menuOpen} onRequestChange={this.toggleMenu} onSave={this.saveVocabulary}/>
-        <VocabularyList vocabularies={this.state.vocabularies} onEnterNewWord={this.addVocabulary}/>
+        <VocabularyList 
+          vocabularies={this.state.vocabularies}
+          onEnterNewWord={this.addVocabulary}
+          onWordSelect={this.updateSeletedWord}
+          />
         <VocabularyActionButton onVocabularyUpdate={this.updateVocabulary}/>
       </div>
       </MuiThemeProvider>

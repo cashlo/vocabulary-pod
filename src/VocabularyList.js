@@ -9,20 +9,32 @@ const newWordStyle = {
 
 class VocabularyList extends React.Component {
 
-	handleKeyPress = (e => {
+	selectedWords = [];
+
+	handleKeyPress = e => {
 		if (e.key === 'Enter') {
 			this.props.onEnterNewWord(e.target.value);
 			e.target.value = "";
     	}
-    })
+    }
+
+    handleSelectedWords = (word, isChecked) => {
+    	if (isChecked) {
+    		this.selectedWords.push(word);
+    	} else {
+    		this.selectedWords = this.selectedWords.filter(w => w !== word);
+    	}
+    	this.props.onWordSelect(this.selectedWords);
+    }
 
 	render() {
 		const rows = [];
-		this.props.vocabularies.forEach(function(word) {
+		this.props.vocabularies.forEach(word => {
 			rows.push(
 				<VocabularyItem
 					key={word.text}
 					word={word.text}
+					onSelect={this.handleSelectedWords}
 				/>
 			);
 		});

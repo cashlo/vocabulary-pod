@@ -28,6 +28,10 @@ class VocabularyItem extends React.Component {
 		this.translateWord(this.props.word);
 	}
 
+	handleSelect = (e, IsChecked) => {
+		this.props.onSelect(this.props.word, IsChecked);
+	}
+
 	translateWord = word => {
 		fetch("https://cors-anywhere.herokuapp.com/https://glosbe.com/gapi/translate?from=nld&dest=eng&format=json&phrase=" + word)
 		    .then(response => response.json())
@@ -41,7 +45,7 @@ class VocabularyItem extends React.Component {
 	render() {
 		return (
 			<ListItem
-			leftCheckbox={<Checkbox />}
+			leftCheckbox={<Checkbox onCheck={this.handleSelect}/>}
 			primaryText={this.props.word}
 			secondaryText={this.state.translation}
 			rightIconButton={
