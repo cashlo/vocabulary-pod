@@ -9,6 +9,7 @@ import DrawerMenu from './DrawerMenu';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
 import VocabularyDownloadDialog from './VocabularyDownloadDialog';
+import Snackbar from 'material-ui/Snackbar';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -176,8 +177,17 @@ class App extends Component {
           }
           this.setState({
             isLoading: false,
+            snackbarOpen: true,
+            snackbarMessage: 'Downloaded ' + learnedWords.length + ' items',
           });
         });
+  }
+
+  handleRequestSnackbarClose = () => {
+          this.setState({
+            snackbarOpen: false,
+            snackbarMessage: '',
+          });    
   }
 
   render() {
@@ -204,6 +214,12 @@ class App extends Component {
           dialogOpen={this.state.dialogOpen}
           onRequestDialogClose={this.handleDialogClose}
           onDownloadWords={this.downloadWords}/>
+        <Snackbar
+          open={this.state.snackbarOpen}
+          message={this.state.snackbarMessage}
+          autoHideDuration={4000}
+          onRequestClose={this.handleRequestSnackbarClose}
+        />  
       </div>
       </MuiThemeProvider>
     );
