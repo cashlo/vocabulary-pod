@@ -76,7 +76,7 @@ class App extends Component {
         })
         .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
-            window.history.replaceState( {} , 'Saved List', '/' + docRef.id );
+            window.history.replaceState( {} , 'Saved List',  window.location.pathname != '/' ? window.location.pathname + '/' + docRef.id : '/' + docRef.id );
             this.setState({isLoading: false});
         })
         .catch(error => {
