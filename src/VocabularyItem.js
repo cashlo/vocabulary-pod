@@ -1,8 +1,8 @@
 import React from 'react';
-import {List, ListItem} from 'material-ui/List';
-import TextField from 'material-ui/TextField';
+import {ListItem} from 'material-ui/List';
 import AudioIcon from 'material-ui/svg-icons/av/volume-up';
 import IconButton from 'material-ui/IconButton';
+import Checkbox from 'material-ui/Checkbox';
 
 class VocabularyItem extends React.Component {
 
@@ -33,18 +33,21 @@ class VocabularyItem extends React.Component {
 		    .then(response => response.json())
 		    .then(json => {
 		    	this.setState({
-		    		translation: json.tuc[0].phrase ? json.tuc[0].phrase.text : ''
+		    		translation: json.tuc[0] && json.tuc[0].phrase ? json.tuc[0].phrase.text : ''
 		    	});
 		    });
 	}
 
 	render() {
 		return (
-			<ListItem 
-			onClick={this.handleClick}
+			<ListItem
+			leftCheckbox={<Checkbox />}
 			primaryText={this.props.word}
 			secondaryText={this.state.translation}
-			rightIcon={<AudioIcon />}
+			rightIconButton={
+				<IconButton onClick={this.handleClick}>
+				<AudioIcon />
+				</IconButton>}
 			/>
 			);
 		}

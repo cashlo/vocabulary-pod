@@ -1,9 +1,11 @@
 import React from 'react';
-import {List, ListItem} from 'material-ui/List';
+import {List} from 'material-ui/List';
 import VocabularyItem from './VocabularyItem';
 import TextField from 'material-ui/TextField';
-import AudioIcon from 'material-ui/svg-icons/av/volume-up';
-import IconButton from 'material-ui/IconButton';
+
+const newWordStyle = {
+	'marginLeft': '72px'
+};
 
 class VocabularyList extends React.Component {
 
@@ -19,6 +21,7 @@ class VocabularyList extends React.Component {
 		this.props.vocabularies.forEach(function(word) {
 			rows.push(
 				<VocabularyItem
+					key={word.text}
 					word={word.text}
 				/>
 			);
@@ -29,6 +32,7 @@ class VocabularyList extends React.Component {
 				{rows}
 			</List>
 			<TextField
+				style={newWordStyle}
 				hintText="Enter vocabulary"
 				onKeyPress={this.handleKeyPress}
 			/>

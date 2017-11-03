@@ -13,7 +13,7 @@ class VocabularyActionButton extends React.Component {
 	handleActionClick = (e => {
 
 		var dUsername = prompt("Please enter your Duolingo username");
-		if (dUsername == null || dUsername == "") {
+		if (dUsername === null || dUsername === "") {
 			return;
 		}
 

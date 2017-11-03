@@ -1,13 +1,12 @@
 import React, { Component } from 'react';
 
-import ReactDOM from 'react-dom';
+//import ReactDOM from 'react-dom';
 import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import VocabularyList from './VocabularyList';
 import AppBar from 'material-ui/AppBar';
 import LinearProgress from 'material-ui/LinearProgress';
 import VocabularyActionButton from './VocabularyActionButton';
 import DrawerMenu from './DrawerMenu';
-import ContentAdd from 'material-ui/svg-icons/content/add';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -29,7 +28,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    let match = /([^\/]*)$/.exec(window.location.pathname);
+    let match = /([^/]*)$/.exec(window.location.pathname);
     let docId = match != null ? match[1] : '';
     this.state = {
       vocabularies: [],
@@ -76,7 +75,7 @@ class App extends Component {
         })
         .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
-            window.history.replaceState( {} , 'Saved List',  window.location.pathname != '/' ? window.location.pathname + '/' + docRef.id : '/' + docRef.id );
+            window.history.replaceState( {} , 'Saved List',  window.location.pathname !== '/' ? window.location.pathname + docRef.id : '/' + docRef.id );
             this.setState({isLoading: false});
         })
         .catch(error => {
