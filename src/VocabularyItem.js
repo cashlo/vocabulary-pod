@@ -6,14 +6,6 @@ import Checkbox from 'material-ui/Checkbox';
 
 class VocabularyItem extends React.Component {
 
-
-  constructor(props) {
-    super(props);
-    this.state = {
-      translation: null,
-    }
-  }
-
 	handleClick = e => {
 		const wordSpeech = new SpeechSynthesisUtterance(this.props.word);
 		const letterSpeech = new SpeechSynthesisUtterance(this.props.word.split('').join('-'));
@@ -36,9 +28,9 @@ class VocabularyItem extends React.Component {
 		fetch("https://cors-anywhere.herokuapp.com/https://glosbe.com/gapi/translate?from=nld&dest=eng&format=json&phrase=" + word)
 		    .then(response => response.json())
 		    .then(json => {
-		    	this.setState({
-		    		translation: json.tuc[0] && json.tuc[0].phrase ? json.tuc[0].phrase.text : ''
-		    	});
+		    	if (json.tuc[0] && json.tuc[0].phrase) {
+		    		this.props.onTranslation(this.props.word, json.tuc[0].phrase.text);
+		    	}
 		    });
 	}
 
@@ -47,7 +39,7 @@ class VocabularyItem extends React.Component {
 			<ListItem
 			leftCheckbox={<Checkbox onCheck={this.handleSelect}/>}
 			primaryText={this.props.word}
-			secondaryText={this.state.translation}
+			secondaryText={this.props.translation}
 			rightIconButton={
 				<IconButton onClick={this.handleClick}>
 				<AudioIcon />

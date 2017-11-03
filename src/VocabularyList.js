@@ -29,12 +29,15 @@ class VocabularyList extends React.Component {
 
 	render() {
 		const rows = [];
-		this.props.vocabularies.forEach(word => {
+		let sortedWords = Object.keys(this.props.vocabularies).sort();
+		sortedWords.forEach(word => {
 			rows.push(
 				<VocabularyItem
-					key={word.text}
-					word={word.text}
+					key={word}
+					word={word}
+					translation={this.props.vocabularies[word].translation}
 					onSelect={this.handleSelectedWords}
+					onTranslation={this.props.onTranslation}
 				/>
 			);
 		});

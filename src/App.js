@@ -35,11 +35,13 @@ class App extends Component {
     let docId = match != null ? match[1] : '';
     this.selectedWords = [];
     this.state = {
-      vocabularies: [],
+      vocabularies: {},
       menuOpen: false,
       dialogOpen: false,
       docId: docId,
       isLoading: false,
+      snackbarOpen: false,
+      snackbarMessage: '',
     }
   }
 
@@ -81,7 +83,12 @@ class App extends Component {
         .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
             window.history.replaceState( {} , 'Saved List',  window.location.pathname !== '/' ? window.location.pathname + docRef.id : '/' + docRef.id );
-            this.setState({isLoading: false});
+            this.setState({
+              docId: docRef.id,
+              isLoading: false,
+              snackbarOpen: true,
+              snackbarMessage: 'List saved, use the URL to access this list anywhere!',
+            });
         })
         .catch(error => {
             console.error("Error adding document: ", error);
@@ -110,18 +117,10 @@ class App extends Component {
     this.setState({dialogOpen: false});
   }
 
-  processVocabulary = vocabularies => {
-    let wordHash = {};
-    vocabularies = vocabularies.filter(v => wordHash[v.text] = !wordHash.hasOwnProperty(v.text));
-    vocabularies.sort( (a,b) => a.text > b.text ? 1 : -1 );
-    return vocabularies;
-  }
-
   addVocabulary = word => {
     this.setState(function(pState, props){
       var nv = pState.vocabularies;
-      nv.push({text: word});
-      nv = this.processVocabulary(nv);
+      nv[word] = {};
       return { vocabularies: nv };
     });
   }
@@ -130,9 +129,8 @@ class App extends Component {
     this.setState(function(pState, props){
       var nv = pState.vocabularies;
       words.forEach(word => {
-        nv.push({text: word});
+         nv[word] = {};
       });
-      nv = this.processVocabulary(nv);
       return { vocabularies: nv };
     });
   }
@@ -143,8 +141,12 @@ class App extends Component {
   }
 
   deleteSelected = () => {
+    let nv = this.state.vocabularies;
+    this.selectedWords.forEach(word => {
+      delete nv[word];
+    });
     this.setState({
-      vocabularies: this.state.vocabularies.filter(v => !this.selectedWords.includes(v.text))
+      vocabularies: nv
     })
   }
 
@@ -190,6 +192,14 @@ class App extends Component {
           });    
   }
 
+  handleTranslation = (word, translation) => {
+    let nv = this.state.vocabularies;
+    nv[word] = {translation: translation};
+    this.setState({
+      vocabularies: nv
+    })
+  }
+
   render() {
     return (
       <MuiThemeProvider>
@@ -209,6 +219,7 @@ class App extends Component {
           vocabularies={this.state.vocabularies}
           onEnterNewWord={this.addVocabulary}
           onWordSelect={this.updateSeletedWord}
+          onTranslation={this.handleTranslation}
           />
         <VocabularyDownloadDialog
           dialogOpen={this.state.dialogOpen}

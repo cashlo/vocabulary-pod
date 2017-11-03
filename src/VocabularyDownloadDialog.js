@@ -3,12 +3,6 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import TextField from 'material-ui/TextField';
 
-const actionButtonStyle = {
-	position: 'fixed',
-    bottom: '24px',
-    right: '24px',
-};
-
 class VocabularyDownloadDialog extends React.Component {
 
 	constructor(props) {
