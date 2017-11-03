@@ -8,7 +8,7 @@ export default class DrawerMenu extends React.Component {
     return (
         <Drawer open={this.props.open} docked={false} onRequestChange={this.props.onRequestChange}>
           <MenuItem onClick={this.props.onSave}>Save vocabularies</MenuItem>
-          <MenuItem>Load learned words</MenuItem>
+          <MenuItem onClick={this.props.onDownload}>Load learned words</MenuItem>
         </Drawer>
     );
   }

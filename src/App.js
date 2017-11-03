@@ -5,10 +5,10 @@ import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
 import VocabularyList from './VocabularyList';
 import AppBar from 'material-ui/AppBar';
 import LinearProgress from 'material-ui/LinearProgress';
-import VocabularyActionButton from './VocabularyActionButton';
 import DrawerMenu from './DrawerMenu';
 import DeleteIcon from 'material-ui/svg-icons/action/delete';
 import IconButton from 'material-ui/IconButton';
+import VocabularyDownloadDialog from './VocabularyDownloadDialog';
 
 import * as firebase from 'firebase';
 import 'firebase/firestore';
@@ -36,6 +36,7 @@ class App extends Component {
     this.state = {
       vocabularies: [],
       menuOpen: false,
+      dialogOpen: false,
       docId: docId,
       isLoading: false,
     }
@@ -104,6 +105,10 @@ class App extends Component {
     });    
   }
 
+  handleDialogClose = buttonClicked => {
+    this.setState({dialogOpen: false});
+  }
+
   processVocabulary = vocabularies => {
     let wordHash = {};
     vocabularies = vocabularies.filter(v => wordHash[v.text] = !wordHash.hasOwnProperty(v.text));
@@ -131,6 +136,7 @@ class App extends Component {
     });
   }
 
+
   updateSeletedWord = selectedWords => {
     this.selectedWords = selectedWords;
   }
@@ -139,6 +145,39 @@ class App extends Component {
     this.setState({
       vocabularies: this.state.vocabularies.filter(v => !this.selectedWords.includes(v.text))
     })
+  }
+
+  downloadWords = (username) => {
+    this.setState({
+      dialogOpen: false,
+      menuOpen: false,
+      isLoading: true,
+    });
+
+    if (username === null || username === "") {
+      this.setState({
+        isLoading: false,
+      });
+      return;
+    }
+
+    fetch('https://cors-anywhere.herokuapp.com/https://www.duolingo.com/users/' + username)
+        .then(response => response.json())
+        .then(json => {
+          let learnedWords = [];
+          if (json.language_data.dn) {
+            let dutchSkills = json.language_data.dn.skills;
+            dutchSkills.forEach(skill => {
+              if(skill.learned) {
+                learnedWords = learnedWords.concat(skill.words);
+              }
+            });
+            this.updateVocabulary(learnedWords);
+          }
+          this.setState({
+            isLoading: false,
+          });
+        });
   }
 
   render() {
@@ -151,13 +190,20 @@ class App extends Component {
           iconElementRight={<IconButton onClick={this.deleteSelected}><DeleteIcon /></IconButton>}
         />
         { this.state.isLoading && <LinearProgress />}
-        <DrawerMenu open={this.state.menuOpen} onRequestChange={this.toggleMenu} onSave={this.saveVocabulary}/>
+        <DrawerMenu 
+          open={this.state.menuOpen}
+          onRequestChange={this.toggleMenu}
+          onSave={this.saveVocabulary}
+          onDownload={() => this.setState({dialogOpen: true})}/>
         <VocabularyList 
           vocabularies={this.state.vocabularies}
           onEnterNewWord={this.addVocabulary}
           onWordSelect={this.updateSeletedWord}
           />
-        <VocabularyActionButton onVocabularyUpdate={this.updateVocabulary}/>
+        <VocabularyDownloadDialog
+          dialogOpen={this.state.dialogOpen}
+          onRequestDialogClose={this.handleDialogClose}
+          onDownloadWords={this.downloadWords}/>
       </div>
       </MuiThemeProvider>
     );
