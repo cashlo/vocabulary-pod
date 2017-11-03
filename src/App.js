@@ -31,7 +31,7 @@ class App extends Component {
 
   constructor(props) {
     super(props);
-    let match = /([^/]*)$/.exec(window.location.pathname);
+    let match = /([^?]*)$/.exec(window.location.search);
     let docId = match != null ? match[1] : '';
     this.selectedWords = [];
     this.state = {
@@ -82,7 +82,7 @@ class App extends Component {
         })
         .then(docRef => {
             console.log("Document written with ID: ", docRef.id);
-            window.history.replaceState( {} , 'Saved List',  window.location.pathname !== '/' ? window.location.pathname + docRef.id : '/' + docRef.id );
+            window.history.replaceState( {} , 'Saved List',  window.location.pathname !== '/' ? window.location.pathname + '?' + docRef.id : '/?' + docRef.id );
             this.setState({
               docId: docRef.id,
               isLoading: false,
