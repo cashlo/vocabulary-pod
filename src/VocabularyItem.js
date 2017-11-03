@@ -8,20 +8,29 @@ class VocabularyItem extends React.Component {
 
 	handleClick = e => {
 		const wordSpeech = new SpeechSynthesisUtterance(this.props.word);
-		const letterSpeech = new SpeechSynthesisUtterance(this.props.word.split('').join('-'));
 		wordSpeech.lang = 'nl';
-		letterSpeech.lang = 'nl';
-		letterSpeech.rate = 0.5;
-		speechSynthesis.speak(wordSpeech);
-		speechSynthesis.speak(letterSpeech);
-		wordSpeech.rate = 0.7;
 		speechSynthesis.speak(wordSpeech);
 
-		this.translateWord(this.props.word);
+		if (this.props.translation) {
+			const translationSpeech = new SpeechSynthesisUtterance(this.props.translation);
+			translationSpeech.lang = 'en';
+			speechSynthesis.speak(translationSpeech);
+		}
+
+		const letterSpeech = new SpeechSynthesisUtterance(this.props.word.split('').join('-'));
+		letterSpeech.lang = 'nl';
+		letterSpeech.rate = 0.5;
+		speechSynthesis.speak(letterSpeech);
+
+		wordSpeech.rate = 0.7;
+		speechSynthesis.speak(wordSpeech);
 	}
 
 	handleSelect = (e, IsChecked) => {
 		this.props.onSelect(this.props.word, IsChecked);
+		if (!this.props.translation) {
+			this.translateWord(this.props.word);
+		}
 	}
 
 	translateWord = word => {
