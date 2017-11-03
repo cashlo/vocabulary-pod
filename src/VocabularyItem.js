@@ -33,7 +33,7 @@ class VocabularyItem extends React.Component {
 		    .then(response => response.json())
 		    .then(json => {
 		    	this.setState({
-		    		translation: json.tuc[0].meanings ? json.tuc[0].meanings[0].text : ''
+		    		translation: json.tuc[0].phrase ? json.tuc[0].phrase.text : ''
 		    	});
 		    });
 	}

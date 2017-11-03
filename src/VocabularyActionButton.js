@@ -12,17 +12,24 @@ class VocabularyActionButton extends React.Component {
 
 	handleActionClick = (e => {
 
-		fetch('https://cors-anywhere.herokuapp.com/https://www.duolingo.com/users/CashLo')
+		var dUsername = prompt("Please enter your Duolingo username");
+		if (dUsername == null || dUsername == "") {
+			return;
+		}
+
+		fetch('https://cors-anywhere.herokuapp.com/https://www.duolingo.com/users/' + dUsername)
 		    .then(response => response.json())
 		    .then(json => {
 		    	let learnedWords = [];
-		    	let dutchSkills = json.language_data.dn.skills;
-		    	dutchSkills.forEach(skill => {
-		    		if(skill.learned) {
-		    			learnedWords = learnedWords.concat(skill.words);
-		    		}
-		    	});
-		    	this.props.onVocabularyUpdate(learnedWords);
+		    	if (json.language_data.dn) {
+			    	let dutchSkills = json.language_data.dn.skills;
+			    	dutchSkills.forEach(skill => {
+			    		if(skill.learned) {
+			    			learnedWords = learnedWords.concat(skill.words);
+			    		}
+			    	});
+			    	this.props.onVocabularyUpdate(learnedWords);
+		    	}
 		    });
     })
 
