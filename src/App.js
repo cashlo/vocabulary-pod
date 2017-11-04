@@ -11,20 +11,10 @@ import IconButton from 'material-ui/IconButton';
 import VocabularyDownloadDialog from './VocabularyDownloadDialog';
 import Snackbar from 'material-ui/Snackbar';
 
-import * as firebase from 'firebase';
+import firebase from './FireConfig';
 import 'firebase/firestore';
 
-  // Initialize Firebase
-  let config = {
-    apiKey: "AIzaSyDzUCsxYGg0sip6oZnI4IotXgJpn1KnkSk",
-    authDomain: "vocabulary-pod.firebaseapp.com",
-    databaseURL: "https://vocabulary-pod.firebaseio.com",
-    projectId: "vocabulary-pod",
-    storageBucket: "vocabulary-pod.appspot.com",
-    messagingSenderId: "279619622076"
-  };
-  firebase.initializeApp(config);
-  let db = firebase.firestore();
+ let db = firebase.firestore();
 
 
 class App extends Component {
